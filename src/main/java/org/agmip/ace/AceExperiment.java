@@ -160,8 +160,14 @@ public class AceExperiment extends AceComponent implements IAceBaseComponent {
         JsonParser p = this.getParser();
         JsonGenerator g = this.getGenerator(bos);
         JsonToken t = p.nextToken();
+        int level = 0;
         while ( t != null) {
-            if (t == JsonToken.END_OBJECT) {
+            if (t == JsonToken.START_OBJECT) {
+                level++;
+            } else  if (t == JsonToken.END_OBJECT) {
+                level--;
+            }
+            if (t == JsonToken.END_OBJECT && level == 0) {
                 // Write the initial conditions
                 g.writeFieldName("initial_conditions");
                 JsonParser subP = this.getInitialConditions().getParser();
